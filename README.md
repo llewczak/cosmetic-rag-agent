@@ -31,11 +31,11 @@ This workflow processes raw cosmetic ingredient data (CSV/JSON), generates embed
 *Workflow steps: Read Data from Google Sheet -> Parse text -> Gemini Embeddings and Data Loader -> Pinecone Vector Store.*
 
 ### 2. AI Agent & RAG Workflow
-This is the consumer-facing workflow. It receives a product label (text or image OCR), queries the Pinecone index for relevant ingredient information, and generates a detailed report.
+This is the consumer-facing workflow. It receives a product label (text or image), queries the Pinecone index for relevant ingredient information, and generates a detailed report.
 
-<img width="695" height="521" alt="image" src="https://github.com/user-attachments/assets/e29f1608-94a2-472d-846e-49049dfd21fa" />
+<img width="673" height="642" alt="image" src="https://github.com/user-attachments/assets/9fcc70bf-1755-4f62-8b55-735129df14a6" />
 
-*Workflow steps: Chat Trigger -> AI Agent Node -> Pinecone Vector Store Tool -> Output*
+*Workflow steps: Chat Trigger -> Check if user attached image -> AI Agent Node -> Pinecone Vector Store Tool -> Output*
 
 ## ⚡ Try It Yourself
 
