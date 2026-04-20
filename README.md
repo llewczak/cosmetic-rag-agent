@@ -10,14 +10,21 @@ The entire logic is orchestrated using **n8n**, providing a seamless flow betwee
 - **RAG Architecture:** Uses a custom-built database of cosmetic ingredients to ensure high accuracy and reduce hallucinations.
 - **Automated Data Pipeline:** Easy ingestion of ingredient datasets into the vector database.
 
+## ⚡ Try It Yourself
+
+You can interact with the live version of the **Cosmetic AI Agent** directly through your browser. Click the link below to start analyzing ingredients in real-time:
+
+👉 **[Launch Live Chat Demo](https://130.61.87.184.sslip.io/webhook/6778a52f-50c8-40a6-b8c1-cc168bd1ddca/chat)** -> User: user, Password: user (If you entered incorrect data, please clear your cookies and try again)
+
+### How to use the chat: 
+Paste the ingredients or attach image of cosmetics.
+
 ## 🛠 Tech Stack
 
 - **n8n:** Workflow automation and agent orchestration.
 - **Pinecone:** Vector database for high-performance ingredient retrieval.
 - **Gemini:** LLM for natural language processing and reasoning.
 - **LangChain (via n8n):** Framework for managing RAG logic.
-
----
 
 ## 🏗 Workflow Architecture
 
@@ -37,11 +44,42 @@ This is the consumer-facing workflow. It receives a product label (text or image
 
 *Workflow steps: Chat Trigger -> Check if user attached image -> AI Agent Node -> Pinecone Vector Store Tool -> Output*
 
-## ⚡ Try It Yourself
+## 🛠 Infrastructure & Deployment
+The automation engine is powered by **n8n** running in a **Docker** container on a remote Linux VM.
 
-You can interact with the live version of the **Cosmetic AI Agent** directly through your browser. Click the link below to start analyzing ingredients in real-time:
+### Deployment Stack:
+- **Engine:** n8n
+- **Containerization:** Docker & Docker Compose
 
-👉 **[Launch Live Chat Demo](https://130.61.87.184.sslip.io/webhook/6778a52f-50c8-40a6-b8c1-cc168bd1ddca/chat)** -> User: user, Password: user
+### How it's running:
+To replicate the environment, the following `docker-compose.yml` logic is used:
+```yaml
+version: '3.8'
 
-### How to use the chat: 
-Paste the Ingredients or attach image
+services:
+  caddy:
+    image: caddy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    command: caddy reverse-proxy --from <IP>.sslip.io --to n8n:5678
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://<IP>.sslip.io/
+      - GENERIC_TIMEZONE=Europe/Warsaw
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
+  caddy_data:
+  caddy_config:
+```
